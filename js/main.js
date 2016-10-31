@@ -17,8 +17,8 @@ navigator.getVRDisplays().then(function (displays) {
 });
 
 function bar(x) {
-    var str = "**********";
-    return str.slice(0, Math.round(x*10));
+    var str = "********************";
+    return str.slice(0, Math.round(x*20));
 }
 
 function set_text(obj) {
