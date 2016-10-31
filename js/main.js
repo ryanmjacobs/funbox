@@ -1,11 +1,11 @@
 // Enumerate the VRDisplays
 navigator.getVRDisplays().then(function (displays) {
-    var frame_data = new VRFrameData();
+    var display = displays[0];
+    display.resetPose();
 
     setInterval(function() {
-        var display = displays[0];
-        display.getFrameData(frame_data);
-        set_text(frame_data.pose);
+        var pose = display.getPose();
+        set_text(pose);
     }, 100);
 });
 
