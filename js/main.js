@@ -1,5 +1,3 @@
-var WebVRConfig = {};
-
 // Enumerate the VRDisplays
 navigator.getVRDisplays().then(function (displays) {
     var display = displays[0];
