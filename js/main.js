@@ -5,7 +5,7 @@ navigator.getVRDisplays().then(function (displays) {
             var display = displays[i];
 
             var pose = display.getPose();
-            document.getElementById("data").innerHTML += JSON.stringify(pose);
+            document.getElementById("data").innerHTML = JSON.stringify(pose);
         }
     }, 500);
 });
