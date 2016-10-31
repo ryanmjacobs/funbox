@@ -9,7 +9,7 @@ navigator.getVRDisplays().then(function (displays) {
 
         var graph = "\n\n";
         for (var key in pose.orientation)
-            graph += bar(pose.orientation[key]) + "\n";
+            graph += key + " " + bar(pose.orientation[key]) + "\n";
 
         set_text(pose);
         append_text(graph);
@@ -17,8 +17,28 @@ navigator.getVRDisplays().then(function (displays) {
 });
 
 function bar(x) {
-    var str = "********************";
-    return str.slice(0, Math.round(x*20));
+    var len = 16;
+    var cnt = Math.abs(Math.round(x*len));
+    var side = repeat(" ", len-cnt) + repeat("*", cnt);
+
+    if (x > 0) {
+        str = "<" + side + "|" + repeat(" ", len) + ">";
+    } else {
+        str = "<" + repeat(" ", len) + "|" + reverse(side) + ">";
+    }
+
+    return str;
+}
+
+function reverse(s) {
+    return s.split("").reverse().join("");
+}
+
+function repeat(c, n) {
+    var str = "";
+    while (n-- > 0)
+        str += c;
+    return str;
 }
 
 function set_text(obj) {
