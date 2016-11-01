@@ -4,16 +4,16 @@ Servo servo;
 
 void setup() {
     servo.attach(9);
+    Serial.begin(9600);
+    Serial.println("Launching servo loop...");
 }
 
 void loop() {
-    for (int pos = 0; pos <= 180; pos += 1) {
-        servo.write(pos);
-        delay(15);
-    }
+    if (Serial.available() > 0) {
+        byte rx = Serial.read();
+        servo.write(rx);
 
-    for (int pos = 180; pos >= 0; pos -= 1) {
-        servo.write(pos);
-        delay(15);
+        Serial.print("rx -> ");
+        Serial.println(rx, DEC);
     }
 }
