@@ -1,5 +1,8 @@
-// Enumerate the VRDisplays
+var ws = new WebSocket("ws://" + location.hostname + ":8888");
+
 navigator.getVRDisplays().then(function (displays) {
+    var cnt = 0;
+    var last = null;
     var display = displays[0];
     display.resetPose();
 
@@ -7,14 +10,54 @@ navigator.getVRDisplays().then(function (displays) {
       //var pose = display.getPose();
         var pose = display.getImmediatePose();
 
+        // read quarternion
+        var q = {
+            w: pose.orientation[0],
+            x: pose.orientation[1],
+            y: pose.orientation[2],
+            z: pose.orientation[3]
+        };
+
+        // convert to euler angles
+        var ysq = q.y * q.y;
+        var t0 = -2 * (ysq + q.z * q.z) + 1;
+        var t1 =  2 * (q.x * q.y - q.w * q.z);
+        var t2 = -2 * (q.x * q.z + q.w * q.y);
+        var t3 =  2 * (q.y * q.z - q.w * q.x);
+        var t4 = -2 * (q.x * q.x + ysq) + 1;
+
+        t2 = t2 >  1 ?  1 : t2;
+        t2 = t2 < -1 ? -1 : t2;
+
+        var pitch = (Math.asin(t2)      * 180/Math.PI + 180).toFixed(0);
+        var roll  = (Math.atan2(t3, t4) * 180/Math.PI + 180).toFixed(0);
+        var yaw   = (Math.atan2(t1, t0) * 180/Math.PI + 180).toFixed(0);
+
+        console.log(pitch, roll, yaw);
+        reset_text();
+        append_text(pitch + " " + roll + " " + yaw + "\n");
+
         var graph = "\n\n";
         for (var key in pose.orientation)
             graph += key + " " + bar(pose.orientation[key]) + "\n";
 
-        set_text(pose);
+      //if (cnt++ % 500) {
+      //    if (val != last)
+      //        set_pan(val);
+
+      //    last = val;
+      //}
+
+        append_text(pose);
         append_text(graph);
-    }, 50);
+    }, 100);
 });
+
+function set_pan(x, y) {
+    ws.send(JSON.stringify({
+        orientation: {x:x, y:y}
+    }));
+}
 
 function bar(x) {
     var len = 16;
@@ -41,9 +84,8 @@ function repeat(c, n) {
     return str;
 }
 
-function set_text(obj) {
+function reset_text(obj) {
     document.getElementById("data").innerHTML = "";
-    append_text(obj);
 }
 
 function append_text(obj) {

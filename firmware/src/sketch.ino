@@ -4,7 +4,7 @@ Servo servo;
 
 void setup() {
     servo.attach(9);
-    Serial.begin(9600);
+    Serial.begin(115200);
     Serial.println("Launching servo loop...");
 }
 

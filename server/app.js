@@ -9,7 +9,7 @@ let wss = new WebSocketServer({port: 8888});
 
 // setup serial port
 var SerialPort = require("serialport");
-var port = new SerialPort("/dev/ttyUSB0", {baudRate: 9600});
+var port = new SerialPort("/dev/ttyUSB0", {baudRate: 115200});
 port.is_open = false;
 port.on("data",  d => console.log("serial_port  data: ", d.toString("utf-8").trim()));
 port.on("error", e => console.log("serial_port error: ", e.message));
