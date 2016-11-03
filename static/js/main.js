@@ -39,28 +39,28 @@ navigator.getVRDisplays().then(function (displays) {
         }
 
         // THREE.js method
-        {
-            var a = new THREE.Euler().fromArray(pose.orientation);
-            var b = [a.x, a.y, a.z];
+        var a = new THREE.Euler().fromArray(pose.orientation);
+        var b = [a.x, a.y, a.z];
 
-            for (var c in b) {
-                b[c] = (b[c] * 360/Math.PI + 90).toFixed(0);
-            }
-
-            append_text(b.join(" ") + "\n");
-            console.log(b);
+        for (var c in b) {
+            b[c] = (b[c] * 360/Math.PI + 90).toFixed(0);
         }
 
-        var graph = "\n\n";
-        for (var key in pose.orientation)
-            graph += key + " " + bar(pose.orientation[key]) + "\n";
+        append_text(b.join(" ") + "\n");
+        console.log(b);
 
-      //if (cnt++ % 500) {
-      //    if (val != last)
-      //        set_pan(val);
+      //var graph = "\n\n";
+      //for (var key in pose.orientation)
+      //    graph += key + " " + bar(pose.orientation[key]) + "\n";
 
-      //    last = val;
-      //}
+        if (cnt++ % 100) {
+            var val = 180-b[1];
+
+            if (val != last)
+                set_pan(val);
+
+            last = val;
+        }
 
         append_text(pose);
         append_text(graph);
