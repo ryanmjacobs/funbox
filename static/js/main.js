@@ -1,5 +1,18 @@
 var ws = new WebSocket("ws://" + location.hostname + ":8888");
 
+// grab our left and right canvas elements
+var canvi = [];
+var ids = ["left-video", "right-video"];
+for (var i = 0; i < ids.length; i++) {
+    canvi[i] = document.getElementById(ids[i]);
+}
+
+// connect to stream server
+var client1 = new WebSocket("ws://" + location.hostname + ":8084");
+var client2 = new WebSocket("ws://" + location.hostname + ":8084");
+var player1 = new jsmpeg(client1, {autoplay: true, benchmark: true, canvas: canvi[0]});
+var player2 = new jsmpeg(client2, {autoplay: true, benchmark: true, canvas: canvi[1]});
+
 navigator.getVRDisplays().then(function (displays) {
     var last = null;
     var display = displays[0];
@@ -19,9 +32,9 @@ navigator.getVRDisplays().then(function (displays) {
 
         set_pan(b[0], b[1]);
 
-        reset_text();
-        append_text(b.join(" ") + "\n");
-        append_text(pose);
+      //reset_text();
+      //append_text(b.join(" ") + "\n");
+      //append_text(pose);
     }, 50);
 });
 
