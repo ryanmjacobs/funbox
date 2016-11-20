@@ -10,16 +10,21 @@ void setup() {
 }
 
 void loop() {
-    int xy = 0;
+    static int xy = 0;
 
     if (Serial.available() > 0) {
         byte rx = Serial.read();
         Serial.print("rx -> ");
         Serial.println(rx, DEC);
 
-        if (xy = !xy)
+        // restart to x
+        if (rx == 255)
+            xy = 0;
+        // move x every other
+        else if (xy = !xy)
             sx.write(rx);
+        // move y every other
         else
-            sy.write(rx);
+            sy.write(180-rx);
     }
 }

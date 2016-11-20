@@ -22,9 +22,11 @@ wss.on("connection", function(ws) {
     ws.on("message", function(msg) {
         try {
             let data = JSON.parse(msg);
-            console.log(data);
-
-            set_pan(data.orientation.x);
+            let o = [data.orientation.x, data.orientation.y].map(
+                e => Math.floor(e).clamp(0, 180)
+            );
+            console.log(o);
+            set_pan(...o);
         } catch(e) {
             console.error(e);
         }
@@ -35,12 +37,16 @@ Number.prototype.clamp = function(min, max) {
     return Math.min(Math.max(this, min), max);
 };
 
-function set_pan(degrees) {
-    let buf = new Buffer(1);
-    buf[0] = Math.floor(degrees).clamp(0, 180);
+function set_pan(x, y) {
+    let vals = [255,x,y];
 
-    if (port.is_open)
-        port.write(buf);
+    for (let v of vals) {
+        let buf = new Buffer(1);
+        buf[0] = v;
+
+        if (port.is_open)
+            port.write(buf);
+    }
 }
 
 function broadcast(data) {
